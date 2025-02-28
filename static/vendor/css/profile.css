@@ -1,3 +1,7 @@
 body {
     padding-top: 56px;
 }
+
+#id_sex {
+    padding: 0 0 0 10px !important;
+}
