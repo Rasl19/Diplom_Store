@@ -104,6 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Users
 
 AUTH_USER_MODEL = 'users.MyUser'
+LOGIN_URL = '/users/login/'
 
 
 # Internationalization

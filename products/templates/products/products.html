@@ -15,8 +15,9 @@
             <h1 class="my-4">Store</h1>
             <div class="list-group">
                 {% for category in categories %}
-                    <a href="#" class="list-group-item">{{ category.name }}</a>
+                    <a href="{% url 'category' category.id %}" class="list-group-item">{{ category.name }}</a>
                 {% endfor %}
+                <a href="{% url 'products' %}" class="list-group-item">Все категории</a>
             </div>
 
         </div>
@@ -69,7 +70,9 @@
                                 <p class="card-text">{{ product.description }}</p>
                             </div>
                             <div class="card-footer text-center">
-                                <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
+                                <a class="btn btn-outline-success" href="{% url 'basket_add' product.id %}">
+                                    Отправить в корзину
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -101,7 +104,7 @@
 {% block footer %}
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
+            <p class="m-0 text-center text-white">Copyright &copy; Store 2025</p>
         </div>
     </footer>
 {% endblock %}
