@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -11,17 +12,45 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
+# def products(request, category_id=None, page_number=1):
+#     if category_id:
+#         product = ProductModel.objects.filter(category_id=category_id)
+#     else:
+#         product = ProductModel.objects.all()
+#
+#     per_page = 3
+#     paginator = Paginator(product, per_page)
+#     product_paginator = paginator.page(page_number)
+#
+#     context = {
+#         'title': 'Store - Каталог',
+#         'categories': ProductCategoryModels.objects.all().order_by('-id'),
+#         'products': product_paginator,
+#         'category_id': category_id,
+#     }
+#     return render(request, 'products/products.html', context)
+
 def products(request, category_id=None):
+    PER_PAGE = 3
     if category_id:
-        product = ProductModel.objects.filter(category_id=category_id)
+        category = ProductCategoryModels.objects.get(id=category_id)
+        products = ProductModel.objects.filter(category=category)
     else:
-        product = ProductModel.objects.all()
-    context = {
-        'title': 'Store - Каталог',
-        'categories': ProductCategoryModels.objects.all().order_by('-id'),
-        'products': product,
-    }
-    return render(request, 'products/products.html', context)
+        products = ProductModel.objects.all()
+    page = request.GET.get('page', 1)
+    if not isinstance(page, int):
+        if page.isdigit():
+            page = int(page)
+        else:
+            page = 1
+    paginator = Paginator(products, per_page=PER_PAGE)
+    page_products = paginator.page(page)
+    return render(request, 'products/products.html', context={
+        'title': 'Store - продукты',
+        'products': page_products,
+        'categories': ProductCategoryModels.objects.all(),
+        'category_id': category_id
+    })
 
 
 @login_required
