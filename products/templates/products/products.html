@@ -19,11 +19,40 @@
                     {% endfor %}
                     <a href="{% url 'products' %}" class="list-group-item">Все категории</a>
                 </div>
+                <h5 class="title_filter">Фильтры</h5>
+                <form>
+{#                    {{ search_form }}#}
+                    <input type="hidden" name="query" value="{{ request.GET.query }}" />
+                    <p class="price_title">Цена</p>
+                    <div class="price_filter">
+{#                        {{ price_filter_form }}#}
+                        <label for="id_min_price">От</label>
+                        {{ price_filter_form.min_price }}
+                        <label for="id_max_price">До</label>
+                        {{ price_filter_form.max_price }}
+                    </div>
+                    <div class="block-in_stock">
+                        {{ price_filter_form.in_stock }} В наличии
+                    </div>
+                    <div class="form-button-filter">
+                        <button type="submit" class="button_filter">Применить</button>
+                        <a href="?"><div class="form-reset-button">Сбросить</div></a>
+                    </div>
+
+                </form>
 
             </div>
             <!-- /.col-lg-3 -->
 
             <div class="col-lg-9">
+
+                <form>
+                    {{ search_form }}
+                    <input type="hidden" name="min_price" value="{{ request.GET.min_price }}" />
+                    <input type="hidden" name="max_price" value="{{ request.GET.max_price }}" />
+                    <input type="hidden" name="in_stock" value="{{ request.GET.in_stock }}" />
+                    <button type="submit" class="button_filter search">Поиск</button>
+                </form>
 
                 <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
                     <ol class="carousel-indicators">
@@ -73,9 +102,14 @@
                                     <p class="card-text">{{ product.description }}</p>
                                 </div>
                                 <div class="card-footer text-center">
-                                    <a class="btn btn-outline-success" href="{% url 'basket_add' product.id %}">
-                                        Отправить в корзину
-                                    </a>
+                                    {% if product.quantity > 0 %}
+                                        <a class="btn btn-outline-success" href="{% url 'basket_add' product.id %}">
+                                            Отправить в корзину
+                                        </a>
+                                    {% else %}
+                                        <p>Нет в наличии</p>
+                                    {% endif %}
+
                                 </div>
                             </div>
                         </div>
@@ -105,7 +139,7 @@
                                 {% else %}
                                     <li class="page-item">
                                 {% endif %}
-                                <a class="page-link" href="?page={{ count }}">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ count }}">
                                     {{ count }}
                                 </a>
                             </li>

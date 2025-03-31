@@ -3,6 +3,10 @@ from .forms import UserLoginForm, UserRegisterForm, UserProfileForm
 from django.contrib import auth, messages
 from products.models import Basket
 from django.contrib.auth.decorators import login_required
+from django.views.generic.base import TemplateView
+from common.views import TitleMixin
+from users.models import MyUser, EmailVerification
+from django.urls import reverse
 
 
 def login(request):
@@ -48,3 +52,18 @@ def profile(request):
 def logout(request):
     auth.logout(request)
     return redirect('index')
+
+
+class EmailVerificationView(TitleMixin, TemplateView):
+    title = 'Store - Подтверждение электронной почты'
+    template_name = 'users/email_verification.html'
+
+    def get(self, request, *args, **kwargs):
+        code = kwargs['code']
+        user = MyUser.objects.get(email=kwargs['email'])
+        email_verifications = EmailVerification.objects.filter(user=user, code=code)
+        if email_verifications.exists() and not email_verifications.first().is_expired():
+            user.is_verified_email = True
+            user.save()
+            return super(EmailVerificationView, self).get(request, *args, **kwargs)
+        return redirect(reverse('index'))

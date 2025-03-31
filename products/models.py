@@ -50,3 +50,7 @@ class Basket(models.Model):
 
     def sum(self):
         return self.product.price * self.quantity
+
+
+class OrderHistory(models.Model):
+    pass
