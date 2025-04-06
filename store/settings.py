@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.humanize',
+
     'products',
     'users',
     'orders',
@@ -67,6 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'products.context_processors.baskets',
             ],
         },
     },
@@ -103,11 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-# Users
-
-AUTH_USER_MODEL = 'users.MyUser'
-LOGIN_URL = '/users/login/'
 
 
 # Internationalization
